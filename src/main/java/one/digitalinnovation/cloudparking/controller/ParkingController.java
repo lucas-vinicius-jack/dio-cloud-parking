@@ -30,7 +30,7 @@ public class ParkingController {
 
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
-
+        return result;
     }
 
 }
