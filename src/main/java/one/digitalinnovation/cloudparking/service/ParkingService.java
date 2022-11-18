@@ -4,6 +4,7 @@ import one.digitalinnovation.cloudparking.model.Parking;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,4 +38,11 @@ public class ParkingService {
         return parkingMap.get(id);
     }
 
+    public Parking create(Parking parkingCreate) {
+        String uuid = getUUID();
+        parkingCreate.setId(uuid);
+        parkingCreate.setEntryDate(LocalDateTime.now());
+        parkingMap.put(uuid, parkingCreate);
+        return parkingCreate;
+    }
 }

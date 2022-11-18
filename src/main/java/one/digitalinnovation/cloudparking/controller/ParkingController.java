@@ -1,15 +1,13 @@
 package one.digitalinnovation.cloudparking.controller;
 
+import one.digitalinnovation.cloudparking.controller.dto.ParkingCreateDTO;
 import one.digitalinnovation.cloudparking.controller.dto.ParkingDTO;
 import one.digitalinnovation.cloudparking.controller.mapper.ParkingMapper;
 import one.digitalinnovation.cloudparking.model.Parking;
 import one.digitalinnovation.cloudparking.service.ParkingService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Arrays;
@@ -40,4 +38,13 @@ public class ParkingController {
         ParkingDTO result = parkingMapper.toParkingDTO(parking);
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO dto) {
+        var parkingCreate = parkingMapper.toParkingCreate(dto);
+        var parking = parkingService.create(parkingCreate);
+        var result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
 }
