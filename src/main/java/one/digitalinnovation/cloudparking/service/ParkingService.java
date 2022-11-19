@@ -5,7 +5,9 @@ import one.digitalinnovation.cloudparking.model.Parking;
 import org.springframework.stereotype.Service;
 
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +19,16 @@ public class ParkingService {
 
     private static Map<String, Parking> parkingMap = new HashMap();
 
-
+/*
     static{
         var id = getUUID();
         var id1 = getUUID();
-        Parking parking = new Parking(id, "DMS-1111","SC", "CELTA","PRETO");
-        Parking parking1 = new Parking(id1, "WAS-1234","Sp", "VW GOL","VERMELHO");
+        Parking parking = new Parking(id, "DMS-1111","SC", "CELTA","PRETO",LocalDateTime.now());
+        Parking parking1 = new Parking(id1, "WAS-1234","Sp", "VW GOL","VERMELHO",LocalDateTime.now());
         parkingMap.put(id,parking);
         parkingMap.put(id1,parking1);
     }
-
+ */
     public List<Parking> findAll(){
         return parkingMap.values().stream().collect(Collectors.toList());
     }
@@ -62,5 +64,24 @@ public class ParkingService {
         parkingMap.replace(id, parking);
         return parking;
     }
+
+
+    public Parking exit(String id){
+        Parking parking = findById(id);
+        parking.setExitDate(LocalDateTime.now());
+        var entrada = parking.getEntryDate();
+        var saida = parking.getExitDate();
+
+        // 10 reais a hora
+        // o calculo é feito em minutos
+        double resultado = ((10/60) * Double.valueOf(ChronoUnit.MINUTES.between(entrada,saida)));
+
+        DecimalFormat df = new DecimalFormat("#,##");
+        parking.setBill(Double.valueOf(df.format(resultado)));
+
+        return parking;
+    }
+
+
 
 }
